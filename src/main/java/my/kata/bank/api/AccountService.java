@@ -18,6 +18,6 @@ public interface AccountService {
 
     void withdraw(Amount withdrawalAmount, Account fromAccount, Instant operationDate);
 
-    List<Statement> getStatements(Account account);
+    List<Statement> getOperationsHistory(Account account);
 
 }

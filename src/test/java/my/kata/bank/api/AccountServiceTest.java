@@ -88,9 +88,9 @@ public class AccountServiceTest {
         // Given
         Account myAccount = anEmptyAccount();
         // When
-        List<Statement> statements = accountService.getStatements(myAccount);
+        List<Statement> history = accountService.getOperationsHistory(myAccount);
         // Then
-        assertThat(statements).isEmpty();
+        assertThat(history).isEmpty();
     }
 
     @Test
@@ -99,9 +99,9 @@ public class AccountServiceTest {
         Account myAccount = anEmptyAccount();
         accountService.deposit(amount(200), myAccount, now);
         // When
-        List<Statement> statements = accountService.getStatements(myAccount);
+        List<Statement> history = accountService.getOperationsHistory(myAccount);
         // THen
-        assertThat(statements).containsExactly(
+        assertThat(history).containsExactly(
                 aStatement()
                         .withOperation(aDeposit(amount(200)))
                         .withCurrentBalance(amount(200))
@@ -120,10 +120,10 @@ public class AccountServiceTest {
         accountService.withdraw(amount(10), myAccount, now);
 
         // When
-        List<Statement> statements = accountService.getStatements(myAccount);
+        List<Statement> history = accountService.getOperationsHistory(myAccount);
 
         // THen
-        assertThat(statements).containsExactly(
+        assertThat(history).containsExactly(
                 aStatement().withOperation(aDeposit(amount(100))).withOperationDate(now).withCurrentBalance(amount(100)).build(),
                 aStatement().withOperation(aWithdrawal(amount(200))).withOperationDate(now).withCurrentBalance(amount(-100)).build(),
                 aStatement().withOperation(aDeposit(amount(200))).withOperationDate(now).withCurrentBalance(amount(100)).build(),

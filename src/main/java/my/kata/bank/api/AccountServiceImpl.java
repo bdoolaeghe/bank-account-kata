@@ -34,7 +34,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Statement> getStatements(Account account) {
-        return account.getStatements();
+    public List<Statement> getOperationsHistory(Account account) {
+        return account.getHistory();
     }
 }

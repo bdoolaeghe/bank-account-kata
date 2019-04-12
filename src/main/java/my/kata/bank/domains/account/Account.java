@@ -18,13 +18,13 @@ import static my.kata.bank.domains.amount.Amount.amount;
 public class Account {
 
     private Amount balance = amount(0);
-    private List<Statement> statements = new ArrayList<>();
+    private List<Statement> history = new ArrayList<>();
 
     private Account() {}
 
     public void apply(Operation operation, Instant operationDate) {
         balance = operation.applyOn(balance);
-        statements.add(aStatement()
+        history.add(aStatement()
                 .withOperation(operation)
                 .withOperationDate(operationDate)
                 .withCurrentBalance(balance)
