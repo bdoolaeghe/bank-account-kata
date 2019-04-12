@@ -14,13 +14,17 @@ public class Amount {
         this.value = value;
     }
 
-    public Amount plus(Amount amountToAdd) {
-        return amount(this.value + amountToAdd.value);
+    public Amount apply(Operation operation) {
+        return amount(this.value + operation.getSignedAmountValue());
     }
 
-    public Amount minus(Amount amountToSubstract) {
-        return amount(this.value - amountToSubstract.value);
-    }
+//    public Amount plus(Amount amountToAdd) {
+//        return amount(this.value + amountToAdd.value);
+//    }
+//
+//    public Amount minus(Amount amountToSubstract) {
+//        return amount(this.value - amountToSubstract.value);
+//    }
 
     public static Amount amount(double value) {
         return new Amount(value);

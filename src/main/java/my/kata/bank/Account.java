@@ -9,6 +9,7 @@ import java.util.List;
 
 import static java.time.Instant.now;
 import static my.kata.bank.Amount.amount;
+import static my.kata.bank.HistoryOperation.historyOperation;
 import static my.kata.bank.LoggedOperation.historized;
 
 public class Account {
@@ -35,6 +36,16 @@ public class Account {
 
     void apply(Withrawal withrawal, Instant operationDate) {
         operations.add(historized(withrawal, operationDate));
+    }
+
+    public List<HistoryOperation> getHistory() {
+        List<HistoryOperation> historyOperations = new ArrayList<>();
+        Amount currentBalance = amount(0);
+        for(LoggedOperation operation : operations) {
+            currentBalance = currentBalance.apply(operation.getOperation());
+            historyOperations.add(historyOperation(operation.getOperation(), operation.getOperationDate(), currentBalance));
+        }
+        return historyOperations;
     }
 
     public static Account newAccount(Deposit firstDeposit) {

@@ -30,7 +30,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<LoggedOperation> getHistory(Account account) {
-        return account.getOperations();
+    public List<HistoryOperation> getHistory(Account account) {
+        return account.getHistory();
     }
 }

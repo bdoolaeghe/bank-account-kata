@@ -9,6 +9,7 @@ import static my.kata.bank.Account.newAccount;
 import static my.kata.bank.Account.newEmptyAccount;
 import static my.kata.bank.Amount.amount;
 import static my.kata.bank.Deposit.newDeposit;
+import static my.kata.bank.HistoryOperation.historyOperation;
 import static my.kata.bank.LoggedOperation.historized;
 import static my.kata.bank.Withrawal.newWithdrawal;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,30 +83,30 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void should_show_empty_history_after_no_operations() {
+    public void should_get_empty_operations_list_after_no_operations() {
         // Given
         Account myAccount = newEmptyAccount();
         // When
-        List<LoggedOperation> history = accountService.getHistory(myAccount);
+        List<LoggedOperation> operations = myAccount.getOperations();
         // Then
-        assertThat(history).isEmpty();
+        assertThat(operations).isEmpty();
     }
 
     @Test
-    public void should_show_history_after_one_operation() {
+    public void should_get_operations_list_after_one_operation() {
         // Given
         Account myAccount = newEmptyAccount();
         accountService.deposit(amount(200d), myAccount, now);
         // When
-        List<LoggedOperation> history = accountService.getHistory(myAccount);
+        List<LoggedOperation> operations = myAccount.getOperations();
         // THen
-        assertThat(history).containsExactly(
+        assertThat(operations).containsExactly(
             historized(newDeposit(amount(200d)), now)
         );
     }
 
     @Test
-    public void should_show_history_after_few_operation() {
+    public void should_get_operations_list_after_few_operation() {
         // Given
         Account myAccount = newAccount(newDeposit(amount(100d)), now);
         accountService.withdraw(amount(200d), myAccount, now);
@@ -114,19 +115,62 @@ public class AccountServiceTest {
         accountService.withdraw(amount(10d), myAccount, now);
 
         // When
-        List<LoggedOperation> history = accountService.getHistory(myAccount);
+        List<LoggedOperation> operations = myAccount.getOperations();
 
         // THen
-        assertThat(history).containsExactly(
+        assertThat(operations).containsExactly(
                 historized(newDeposit(amount(100d)), now),
                 historized(newWithdrawal(amount(200d)), now),
                 historized(newDeposit(amount(200d)), now),
                 historized(newDeposit(amount(50d)), now),
                 historized(newWithdrawal(amount(10d)), now)
         );
-
     }
 
+    @Test
+    public void should_get_empty_history_when_no_operation_occured() {
+        // Given
+        Account myAccount = newEmptyAccount();
+        // When
+        List<HistoryOperation> history = accountService.getHistory(myAccount);
+        // Then
+        assertThat(history).isEmpty();
+    }
+
+    @Test
+    public void should_get_history_after_one_operation() {
+        // Given
+        Account myAccount = newEmptyAccount();
+        accountService.deposit(amount(200d), myAccount, now);
+        // When
+        List<HistoryOperation> history = accountService.getHistory(myAccount);
+        // THen
+        assertThat(history).containsExactly(
+                historyOperation(newDeposit(amount(200d)), now,  amount(200d))
+        );
+    }
+
+    @Test
+    public void should_get_history_after_few_operation() {
+        // Given
+        Account myAccount = newAccount(newDeposit(amount(100d)), now);
+        accountService.withdraw(amount(200d), myAccount, now);
+        accountService.deposit(amount(200d), myAccount, now);
+        accountService.deposit(amount(50d), myAccount, now);
+        accountService.withdraw(amount(10d), myAccount, now);
+
+        // When
+        List<HistoryOperation> history = accountService.getHistory(myAccount);
+
+        // THen
+        assertThat(history).containsExactly(
+                historyOperation(newDeposit(amount(100d)), now, amount(100d)),
+                historyOperation(newWithdrawal(amount(200d)), now, amount(-100d)),
+                historyOperation(newDeposit(amount(200d)), now, amount(100d)),
+                historyOperation(newDeposit(amount(50d)), now, amount(150d)),
+                historyOperation(newWithdrawal(amount(10d)), now, amount(140d))
+        );
+    }
     // many ? (paginaation ?)
 
     // balance after each operation ?
