@@ -1,17 +1,20 @@
-package my.kata.bank;
+package my.kata.bank.api;
 
+import my.kata.bank.domains.account.Account;
+import my.kata.bank.domains.account.BalancedLoggedOperation;
+import my.kata.bank.domains.account.LoggedOperation;
 import org.junit.Test;
 
 import java.time.Instant;
 import java.util.List;
 
-import static my.kata.bank.Account.newAccount;
-import static my.kata.bank.Account.newEmptyAccount;
-import static my.kata.bank.Amount.amount;
-import static my.kata.bank.Deposit.newDeposit;
-import static my.kata.bank.HistoryOperation.historyOperation;
-import static my.kata.bank.LoggedOperation.historized;
-import static my.kata.bank.Withrawal.newWithdrawal;
+import static my.kata.bank.domains.account.Account.anAccount;
+import static my.kata.bank.domains.account.Account.anEmptyAccount;
+import static my.kata.bank.domains.account.BalancedLoggedOperation.aBalancedLoggedOperation;
+import static my.kata.bank.domains.account.LoggedOperation.aLoggedOperation;
+import static my.kata.bank.domains.amount.Amount.amount;
+import static my.kata.bank.domains.operation.Deposit.aDeposit;
+import static my.kata.bank.domains.operation.Withrawal.aWithdrawal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AccountServiceTest {
@@ -22,7 +25,7 @@ public class AccountServiceTest {
     @Test
     public void should_increase_balance_after_the_deposit() {
         // Given
-        Account myAccount = newAccount(newDeposit(amount(0f)));
+        Account myAccount = anAccount(aDeposit(amount(0f)));
         // When
         accountService.deposit(amount(10), myAccount);
         // THen
@@ -32,7 +35,7 @@ public class AccountServiceTest {
     @Test
     public void should_increase_balance_after_a_second_deposit() {
         // Given
-        Account myAccount = newAccount(newDeposit(amount(100d)));
+        Account myAccount = anAccount(aDeposit(amount(100d)));
         // When
         accountService.deposit(amount(10), myAccount);
         // THen
@@ -41,18 +44,18 @@ public class AccountServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void should_not_support_negative_amount_withdrawal() {
-        newWithdrawal(new Amount(-1f));
+        aWithdrawal(amount(-1f));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void should_not_support_negative_amount_deposit() {
-        newDeposit(new Amount(-1f));
+        aDeposit(amount(-1f));
     }
 
     @Test
     public void should_decrease_balance_after_a_withdrawal() {
         // Given
-        Account myAccount = newAccount(newDeposit(amount(100d)));
+        Account myAccount = anAccount(aDeposit(amount(100d)));
         // When
         accountService.withdraw(amount(10), myAccount);
         // THen
@@ -62,7 +65,7 @@ public class AccountServiceTest {
     @Test
     public void should_allow_to_withdraw_when_balance_becomes_negative() {
         // Given
-        Account myAccount = newAccount(newDeposit(amount(100d)));
+        Account myAccount = anAccount(aDeposit(amount(100d)));
         // When
         accountService.withdraw(amount(200d), myAccount);
         // THen
@@ -72,7 +75,7 @@ public class AccountServiceTest {
     @Test
     public void should_get_balance_after_few_operations() {
         // Given
-        Account myAccount = newAccount(newDeposit(amount(100d)));
+        Account myAccount = anAccount(aDeposit(amount(100d)));
         // When
         accountService.withdraw(amount(200d), myAccount);
         accountService.deposit(amount(200d), myAccount);
@@ -85,9 +88,9 @@ public class AccountServiceTest {
     @Test
     public void should_get_empty_operations_list_after_no_operations() {
         // Given
-        Account myAccount = newEmptyAccount();
+        Account myAccount = anEmptyAccount();
         // When
-        List<LoggedOperation> operations = myAccount.getOperations();
+        List<LoggedOperation> operations = myAccount.getOperationsLog();
         // Then
         assertThat(operations).isEmpty();
     }
@@ -95,44 +98,44 @@ public class AccountServiceTest {
     @Test
     public void should_get_operations_list_after_one_operation() {
         // Given
-        Account myAccount = newEmptyAccount();
+        Account myAccount = anEmptyAccount();
         accountService.deposit(amount(200d), myAccount, now);
         // When
-        List<LoggedOperation> operations = myAccount.getOperations();
+        List<LoggedOperation> operations = myAccount.getOperationsLog();
         // THen
         assertThat(operations).containsExactly(
-            historized(newDeposit(amount(200d)), now)
+            aLoggedOperation(aDeposit(amount(200d)), now)
         );
     }
 
     @Test
     public void should_get_operations_list_after_few_operation() {
         // Given
-        Account myAccount = newAccount(newDeposit(amount(100d)), now);
+        Account myAccount = Account.anAccount(aDeposit(amount(100d)), now);
         accountService.withdraw(amount(200d), myAccount, now);
         accountService.deposit(amount(200d), myAccount, now);
         accountService.deposit(amount(50d), myAccount, now);
         accountService.withdraw(amount(10d), myAccount, now);
 
         // When
-        List<LoggedOperation> operations = myAccount.getOperations();
+        List<LoggedOperation> operations = myAccount.getOperationsLog();
 
         // THen
         assertThat(operations).containsExactly(
-                historized(newDeposit(amount(100d)), now),
-                historized(newWithdrawal(amount(200d)), now),
-                historized(newDeposit(amount(200d)), now),
-                historized(newDeposit(amount(50d)), now),
-                historized(newWithdrawal(amount(10d)), now)
+                aLoggedOperation(aDeposit(amount(100d)), now),
+                aLoggedOperation(aWithdrawal(amount(200d)), now),
+                aLoggedOperation(aDeposit(amount(200d)), now),
+                aLoggedOperation(aDeposit(amount(50d)), now),
+                aLoggedOperation(aWithdrawal(amount(10d)), now)
         );
     }
 
     @Test
     public void should_get_empty_history_when_no_operation_occured() {
         // Given
-        Account myAccount = newEmptyAccount();
+        Account myAccount = anEmptyAccount();
         // When
-        List<HistoryOperation> history = accountService.getHistory(myAccount);
+        List<BalancedLoggedOperation> history = accountService.getHistory(myAccount);
         // Then
         assertThat(history).isEmpty();
     }
@@ -140,38 +143,36 @@ public class AccountServiceTest {
     @Test
     public void should_get_history_after_one_operation() {
         // Given
-        Account myAccount = newEmptyAccount();
+        Account myAccount = anEmptyAccount();
         accountService.deposit(amount(200d), myAccount, now);
         // When
-        List<HistoryOperation> history = accountService.getHistory(myAccount);
+        List<BalancedLoggedOperation> history = accountService.getHistory(myAccount);
         // THen
         assertThat(history).containsExactly(
-                historyOperation(newDeposit(amount(200d)), now,  amount(200d))
+                aBalancedLoggedOperation(aDeposit(amount(200d)), now,  amount(200d))
         );
     }
 
     @Test
     public void should_get_history_after_few_operation() {
         // Given
-        Account myAccount = newAccount(newDeposit(amount(100d)), now);
+        Account myAccount = Account.anAccount(aDeposit(amount(100d)), now);
         accountService.withdraw(amount(200d), myAccount, now);
         accountService.deposit(amount(200d), myAccount, now);
         accountService.deposit(amount(50d), myAccount, now);
         accountService.withdraw(amount(10d), myAccount, now);
 
         // When
-        List<HistoryOperation> history = accountService.getHistory(myAccount);
+        List<BalancedLoggedOperation> history = accountService.getHistory(myAccount);
 
         // THen
         assertThat(history).containsExactly(
-                historyOperation(newDeposit(amount(100d)), now, amount(100d)),
-                historyOperation(newWithdrawal(amount(200d)), now, amount(-100d)),
-                historyOperation(newDeposit(amount(200d)), now, amount(100d)),
-                historyOperation(newDeposit(amount(50d)), now, amount(150d)),
-                historyOperation(newWithdrawal(amount(10d)), now, amount(140d))
+                aBalancedLoggedOperation(aDeposit(amount(100d)), now, amount(100d)),
+                aBalancedLoggedOperation(aWithdrawal(amount(200d)), now, amount(-100d)),
+                aBalancedLoggedOperation(aDeposit(amount(200d)), now, amount(100d)),
+                aBalancedLoggedOperation(aDeposit(amount(50d)), now, amount(150d)),
+                aBalancedLoggedOperation(aWithdrawal(amount(10d)), now, amount(140d))
         );
     }
-    // many ? (paginaation ?)
 
-    // balance after each operation ?
 }

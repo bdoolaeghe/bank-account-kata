@@ -1,12 +1,13 @@
-package my.kata.bank;
+package my.kata.bank.domains.amount;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import my.kata.bank.domains.operation.Operation;
 
 @EqualsAndHashCode
 public class Amount {
 
-    //FIXME double type is enough to start, but may need to care about currency, digits...
+    //FIXME double type is enough to start, but may need to care about currency and digits
     @Getter
     private final double value;
 
@@ -21,10 +22,6 @@ public class Amount {
     public Amount plus(Amount amountToAdd) {
         return amount(this.value + amountToAdd.value);
     }
-//
-//    public Amount minus(Amount amountToSubstract) {
-//        return amount(this.value - amountToSubstract.value);
-//    }
 
     public static Amount amount(double value) {
         return new Amount(value);

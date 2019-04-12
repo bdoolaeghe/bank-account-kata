@@ -1,8 +1,13 @@
-package my.kata.bank;
+package my.kata.bank.api;
+
+import my.kata.bank.domains.account.Account;
+import my.kata.bank.domains.account.BalancedLoggedOperation;
+import my.kata.bank.domains.amount.Amount;
 
 import java.time.Instant;
 import java.util.List;
 
+//API
 public interface AccountService {
 
     void deposit(Amount depositAmount, Account toAccount);
@@ -13,6 +18,6 @@ public interface AccountService {
 
     void withdraw(Amount withdrawalAmount, Account fromAccount, Instant operationDate);
 
-    List<HistoryOperation> getHistory(Account account);
+    List<BalancedLoggedOperation> getHistory(Account account);
 
 }

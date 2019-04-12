@@ -1,8 +1,9 @@
-package my.kata.bank;
+package my.kata.bank.domains.account;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import my.kata.bank.domains.operation.Operation;
 
 import java.time.Instant;
 
@@ -19,7 +20,7 @@ public class LoggedOperation {
         this.operation = operation;
     }
 
-    public static LoggedOperation historized(Operation operation, Instant operationDate) {
+    public static LoggedOperation aLoggedOperation(Operation operation, Instant operationDate) {
         return new LoggedOperation(operationDate, operation);
     }
 

@@ -1,6 +1,7 @@
-package my.kata.bank;
+package my.kata.bank.domains.operation;
 
 import lombok.EqualsAndHashCode;
+import my.kata.bank.domains.amount.Amount;
 
 @EqualsAndHashCode
 public class Withrawal extends Operation {
@@ -10,11 +11,11 @@ public class Withrawal extends Operation {
     }
 
     @Override
-    double getSignedAmountValue() {
+    public double getSignedAmountValue() {
         return -1 * amount.getValue();
     }
 
-    public static Withrawal newWithdrawal(Amount amount) {
+    public static Withrawal aWithdrawal(Amount amount) {
         return new Withrawal(amount);
     }
 

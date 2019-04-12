@@ -1,8 +1,9 @@
-package my.kata.bank;
+package my.kata.bank.domains.operation;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import my.kata.bank.domains.amount.Amount;
 
 @EqualsAndHashCode
 @ToString
@@ -19,6 +20,6 @@ public abstract class Operation {
         this.amount = amount;
     }
 
-    abstract double getSignedAmountValue();
+    public abstract double getSignedAmountValue();
 
 }
