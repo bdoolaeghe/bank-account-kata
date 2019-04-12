@@ -1,13 +1,18 @@
 package my.kata.bank;
 
+import java.time.Instant;
 import java.util.List;
 
 public interface AccountService {
 
-    void deposit(Deposit deposit, Account toAccount);
+    void deposit(Amount depositAmount, Account toAccount);
 
-    void withdraw(Withrawal withdrawal, Account fromAccount);
+    void deposit(Amount depositAmount, Account toAccount, Instant operationDate);
 
-    List<Operation> getHistory(Account account);
+    void withdraw(Amount withdrawalAmount, Account fromAccount);
+
+    void withdraw(Amount withdrawalAmount, Account fromAccount, Instant operationDate);
+
+    List<LoggedOperation> getHistory(Account account);
 
 }
