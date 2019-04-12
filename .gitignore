@@ -1,0 +1,6 @@
+.idea
+target
+/data
+*.iml
+*.ipr
+.DS_Store
