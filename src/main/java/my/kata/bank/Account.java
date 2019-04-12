@@ -38,14 +38,28 @@ public class Account {
         operations.add(historized(withrawal, operationDate));
     }
 
-    public List<HistoryOperation> getHistory() {
-        List<HistoryOperation> historyOperations = new ArrayList<>();
+    static class OperationAccumulator {
         Amount currentBalance = amount(0);
-        for(LoggedOperation operation : operations) {
+        @Getter
+        List<HistoryOperation> historyOperations = new ArrayList<>();
+
+        void accept(LoggedOperation operation) {
             currentBalance = currentBalance.apply(operation.getOperation());
             historyOperations.add(historyOperation(operation.getOperation(), operation.getOperationDate(), currentBalance));
         }
-        return historyOperations;
+
+        void combine(OperationAccumulator anotherAccumulator) {
+            currentBalance.plus(anotherAccumulator.currentBalance);
+            historyOperations.addAll(anotherAccumulator.getHistoryOperations());
+        }
+    }
+
+    public List<HistoryOperation> getHistory() {
+        return operations.parallelStream()
+                .collect(OperationAccumulator::new,
+                        OperationAccumulator::accept,
+                        OperationAccumulator::combine)
+                .getHistoryOperations();
     }
 
     public static Account newAccount(Deposit firstDeposit) {

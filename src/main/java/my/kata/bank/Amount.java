@@ -18,9 +18,9 @@ public class Amount {
         return amount(this.value + operation.getSignedAmountValue());
     }
 
-//    public Amount plus(Amount amountToAdd) {
-//        return amount(this.value + amountToAdd.value);
-//    }
+    public Amount plus(Amount amountToAdd) {
+        return amount(this.value + amountToAdd.value);
+    }
 //
 //    public Amount minus(Amount amountToSubstract) {
 //        return amount(this.value - amountToSubstract.value);
