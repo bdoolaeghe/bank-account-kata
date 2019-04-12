@@ -1,7 +1,7 @@
 package my.kata.bank.api;
 
 import my.kata.bank.domains.account.Account;
-import my.kata.bank.domains.account.BalancedLoggedOperation;
+import my.kata.bank.domains.account.HistoryOperation;
 import my.kata.bank.domains.amount.Amount;
 
 import java.time.Instant;
@@ -34,7 +34,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<BalancedLoggedOperation> getHistory(Account account) {
+    public List<HistoryOperation> getHistory(Account account) {
         return account.getHistory();
     }
 }

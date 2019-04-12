@@ -10,13 +10,13 @@ public class Deposit extends Operation {
         super(amount);
     }
 
-    @Override
-    public double getSignedAmountValue() {
-        return amount.getValue();
-    }
-
     public static Deposit aDeposit(Amount amount) {
         return new Deposit(amount);
+    }
+
+    @Override
+    public Amount applyOn(Amount amountBefore) {
+        return amountBefore.plus(getAmount());
     }
 
     @Override

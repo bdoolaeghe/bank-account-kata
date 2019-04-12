@@ -11,8 +11,8 @@ public class Withrawal extends Operation {
     }
 
     @Override
-    public double getSignedAmountValue() {
-        return -1 * amount.getValue();
+    public Amount applyOn(Amount amountBefore) {
+        return amountBefore.minus(getAmount());
     }
 
     public static Withrawal aWithdrawal(Amount amount) {

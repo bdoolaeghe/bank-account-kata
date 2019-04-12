@@ -2,7 +2,6 @@ package my.kata.bank.domains.amount;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import my.kata.bank.domains.operation.Operation;
 
 @EqualsAndHashCode
 public class Amount {
@@ -15,12 +14,12 @@ public class Amount {
         this.value = value;
     }
 
-    public Amount apply(Operation operation) {
-        return amount(this.value + operation.getSignedAmountValue());
-    }
-
     public Amount plus(Amount amountToAdd) {
         return amount(this.value + amountToAdd.value);
+    }
+
+    public Amount minus(Amount amountToSubscribe) {
+        return amount(this.value - amountToSubscribe.value);
     }
 
     public static Amount amount(double value) {
@@ -35,4 +34,5 @@ public class Amount {
     public boolean isNegative() {
         return value < 0;
     }
+
 }

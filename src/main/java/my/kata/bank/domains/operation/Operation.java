@@ -20,6 +20,8 @@ public abstract class Operation {
         this.amount = amount;
     }
 
-    public abstract double getSignedAmountValue();
+    public abstract Amount applyOn(Amount amount);
+
+//    public abstract double getSignedAmountValue();
 
 }
