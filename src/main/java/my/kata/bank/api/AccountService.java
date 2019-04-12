@@ -1,7 +1,7 @@
 package my.kata.bank.api;
 
 import my.kata.bank.domains.account.Account;
-import my.kata.bank.domains.account.HistoryOperation;
+import my.kata.bank.domains.account.Statement;
 import my.kata.bank.domains.amount.Amount;
 
 import java.time.Instant;
@@ -18,6 +18,6 @@ public interface AccountService {
 
     void withdraw(Amount withdrawalAmount, Account fromAccount, Instant operationDate);
 
-    List<HistoryOperation> getHistory(Account account);
+    List<Statement> getStatements(Account account);
 
 }

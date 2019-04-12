@@ -14,41 +14,41 @@ import java.time.Instant;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class HistoryOperation {
+public class Statement {
 
     private final Operation operation;
     private final Instant operationDate;
     private final Amount currentBalance;
 
-    public static final class HistoryOperationBuilder {
+    public static final class StatementBuilder {
         private Operation operation;
         private Instant operationDate;
         private Amount currentBalance;
 
-        private HistoryOperationBuilder() {
+        private StatementBuilder() {
         }
 
-        public static HistoryOperationBuilder aHistoryOperation() {
-            return new HistoryOperationBuilder();
+        public static StatementBuilder aStatement() {
+            return new StatementBuilder();
         }
 
-        public HistoryOperationBuilder withOperation(Operation operation) {
+        public StatementBuilder withOperation(Operation operation) {
             this.operation = operation;
             return this;
         }
 
-        public HistoryOperationBuilder withOperationDate(Instant operationDate) {
+        public StatementBuilder withOperationDate(Instant operationDate) {
             this.operationDate = operationDate;
             return this;
         }
 
-        public HistoryOperationBuilder withCurrentBalance(Amount currentBalance) {
+        public StatementBuilder withCurrentBalance(Amount currentBalance) {
             this.currentBalance = currentBalance;
             return this;
         }
 
-        public HistoryOperation build() {
-            return new HistoryOperation(operation, operationDate, currentBalance);
+        public Statement build() {
+            return new Statement(operation, operationDate, currentBalance);
         }
     }
 }

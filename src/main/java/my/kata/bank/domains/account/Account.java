@@ -11,20 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.Instant.now;
-import static my.kata.bank.domains.account.HistoryOperation.HistoryOperationBuilder.aHistoryOperation;
+import static my.kata.bank.domains.account.Statement.StatementBuilder.aStatement;
 import static my.kata.bank.domains.amount.Amount.amount;
 
 @Getter
 public class Account {
 
     private Amount balance = amount(0);
-    private List<HistoryOperation> history = new ArrayList<>();
+    private List<Statement> statements = new ArrayList<>();
 
     private Account() {}
 
     public void apply(Operation operation, Instant operationDate) {
         balance = operation.applyOn(balance);
-        history.add(aHistoryOperation()
+        statements.add(aStatement()
                 .withOperation(operation)
                 .withOperationDate(operationDate)
                 .withCurrentBalance(balance)

@@ -1,7 +1,7 @@
 package my.kata.bank.api;
 
 import my.kata.bank.domains.account.Account;
-import my.kata.bank.domains.account.HistoryOperation;
+import my.kata.bank.domains.account.Statement;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -9,7 +9,7 @@ import java.util.List;
 
 import static my.kata.bank.domains.account.Account.anAccount;
 import static my.kata.bank.domains.account.Account.anEmptyAccount;
-import static my.kata.bank.domains.account.HistoryOperation.HistoryOperationBuilder.aHistoryOperation;
+import static my.kata.bank.domains.account.Statement.StatementBuilder.aStatement;
 import static my.kata.bank.domains.amount.Amount.amount;
 import static my.kata.bank.domains.operation.Deposit.aDeposit;
 import static my.kata.bank.domains.operation.Withrawal.aWithdrawal;
@@ -88,9 +88,9 @@ public class AccountServiceTest {
         // Given
         Account myAccount = anEmptyAccount();
         // When
-        List<HistoryOperation> history = accountService.getHistory(myAccount);
+        List<Statement> statements = accountService.getStatements(myAccount);
         // Then
-        assertThat(history).isEmpty();
+        assertThat(statements).isEmpty();
     }
 
     @Test
@@ -99,10 +99,10 @@ public class AccountServiceTest {
         Account myAccount = anEmptyAccount();
         accountService.deposit(amount(200), myAccount, now);
         // When
-        List<HistoryOperation> history = accountService.getHistory(myAccount);
+        List<Statement> statements = accountService.getStatements(myAccount);
         // THen
-        assertThat(history).containsExactly(
-                aHistoryOperation()
+        assertThat(statements).containsExactly(
+                aStatement()
                         .withOperation(aDeposit(amount(200)))
                         .withCurrentBalance(amount(200))
                         .withOperationDate(now)
@@ -120,15 +120,15 @@ public class AccountServiceTest {
         accountService.withdraw(amount(10), myAccount, now);
 
         // When
-        List<HistoryOperation> history = accountService.getHistory(myAccount);
+        List<Statement> statements = accountService.getStatements(myAccount);
 
         // THen
-        assertThat(history).containsExactly(
-                aHistoryOperation().withOperation(aDeposit(amount(100))).withOperationDate(now).withCurrentBalance(amount(100)).build(),
-                aHistoryOperation().withOperation(aWithdrawal(amount(200))).withOperationDate(now).withCurrentBalance(amount(-100)).build(),
-                aHistoryOperation().withOperation(aDeposit(amount(200))).withOperationDate(now).withCurrentBalance(amount(100)).build(),
-                aHistoryOperation().withOperation(aDeposit(amount(50))).withOperationDate(now).withCurrentBalance(amount(150)).build(),
-                aHistoryOperation().withOperation(aWithdrawal(amount(10))).withOperationDate(now).withCurrentBalance(amount(140)).build()
+        assertThat(statements).containsExactly(
+                aStatement().withOperation(aDeposit(amount(100))).withOperationDate(now).withCurrentBalance(amount(100)).build(),
+                aStatement().withOperation(aWithdrawal(amount(200))).withOperationDate(now).withCurrentBalance(amount(-100)).build(),
+                aStatement().withOperation(aDeposit(amount(200))).withOperationDate(now).withCurrentBalance(amount(100)).build(),
+                aStatement().withOperation(aDeposit(amount(50))).withOperationDate(now).withCurrentBalance(amount(150)).build(),
+                aStatement().withOperation(aWithdrawal(amount(10))).withOperationDate(now).withCurrentBalance(amount(140)).build()
         );
     }
 
