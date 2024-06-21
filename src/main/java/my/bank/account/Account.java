@@ -2,10 +2,10 @@ package my.bank.account;
 
 class Account {
 
-    private final Currency currency;
+    private Amount balance;
 
     Account(Amount initialFunds) {
-        this.currency = initialFunds.currency();
+        this.balance = initialFunds;
     }
 
     public Account() {
@@ -13,14 +13,14 @@ class Account {
     }
 
     void deposit(Amount amount) {
-        throw new RuntimeException("implement me !");
+        this.balance = balance.plus(amount);
     }
 
     Amount getBalance() {
-        throw new RuntimeException("implement me !");
+        return balance;
     }
 
     public Currency getCurrency() {
-        throw new RuntimeException("implement me !");
+        return balance.currency();
     }
 }
