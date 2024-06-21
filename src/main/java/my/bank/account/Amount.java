@@ -7,6 +7,15 @@ record Amount(double value, Currency currency) {
     }
 
     public Amount plus(Amount added) {
-        throw new RuntimeException("implement me !");
+        if (added.currency != currency) {
+            throw new IllegalArgumentException("Can't add amount in " + added.currency + " to current amount " + this);
+        } else {
+            return new Amount(value + added.value, currency);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return value + " " + currency;
     }
 }
