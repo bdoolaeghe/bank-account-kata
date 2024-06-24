@@ -1,14 +1,14 @@
 package my.bank.account;
 
-record Amount(double value, Currency currency) {
+public record Amount(double value, Currency currency) {
 
-    Amount {
+    public Amount {
         if (value < 0) {
             throw new IllegalArgumentException("Amount cannot be negative (was: " + value + ")");
         }
     }
 
-    static Amount of(double value, Currency currency) {
+    public static Amount of(double value, Currency currency) {
         return new Amount(value, currency);
     }
 

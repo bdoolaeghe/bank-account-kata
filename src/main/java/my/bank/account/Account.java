@@ -1,22 +1,22 @@
 package my.bank.account;
 
-class Account {
+public class Account {
 
     private Amount balance;
 
-    Account(Amount initialFunds) {
+    public Account(Amount initialFunds) {
         this.balance = initialFunds;
     }
 
-    Account() {
-        this(new Amount(0, Currency.EUR));
+    public Account() {
+        this(Amount.of(0, Currency.EUR));
     }
 
-    void deposit(Amount amount) {
+    public void deposit(Amount amount) {
         this.balance = balance.plus(amount);
     }
 
-    void withdraw(Amount amount) {
+    public void withdraw(Amount amount) {
         try {
             this.balance = balance.minus(amount);
         } catch (IllegalArgumentException e) {
@@ -24,7 +24,7 @@ class Account {
         }
     }
 
-    Amount getBalance() {
+    public Amount getBalance() {
         return balance;
     }
 
