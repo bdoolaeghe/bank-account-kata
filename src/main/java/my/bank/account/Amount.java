@@ -19,13 +19,13 @@ public record Amount(double value, Currency currency) {
 
     Amount minus(Amount subtracted) {
         checkCurrencyIsSame(subtracted);
-        checkRemainPositiveAmount(subtracted);
+        checkGreaterThanOrEquals(subtracted);
         return Amount.of(value - subtracted.value, currency);
     }
 
-    private void checkRemainPositiveAmount(Amount subtracted) {
-        if (subtracted.gt(this)) {
-            throw new IllegalArgumentException("Can't subtract " + subtracted + " because it's greater than current amount (" + this + ")");
+    private void checkGreaterThanOrEquals(Amount another) {
+        if (another.gt(this)) {
+            throw new IllegalArgumentException("Can't subtract " + another + " because it's greater than current amount (" + this + ")");
         }
     }
 
