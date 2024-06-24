@@ -16,6 +16,10 @@ class Account {
         this.balance = balance.plus(amount);
     }
 
+    void withdraw(Amount amount) {
+        throw new RuntimeException("implement me !");
+    }
+
     Amount getBalance() {
         return balance;
     }
