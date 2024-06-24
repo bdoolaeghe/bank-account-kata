@@ -1,5 +1,5 @@
 package my.bank.account;
 
-enum Currency {
+public enum Currency {
     EUR, USD
 }
