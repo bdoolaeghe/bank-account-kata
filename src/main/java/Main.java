@@ -13,7 +13,7 @@ public class Main {
         myAccount.deposit(Amount.of(10, EUR), today);
         myAccount.withdraw(Amount.of(5, EUR), today);
         System.out.println("my account balance: " + myAccount.getBalance());
-        System.out.println("my account history:\n" + myAccount.accountStatement());
+        System.out.println("my account report:\n" + myAccount.getReport());
     }
 
 }

@@ -3,6 +3,7 @@ package my.bank.account;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Account {
 
@@ -62,6 +63,22 @@ public class Account {
     }
 
     public AccountReport getReport() {
-        throw new RuntimeException("implement me !");
+        //FIXME refactor
+        AtomicReference<Amount> balance = new AtomicReference<>(Amount.ZERO);
+        return new AccountReport(
+                history.stream()
+                .map(operation -> switch (operation) {
+                    case Deposit deposit ->
+                         new AccountReport.Row(deposit, balance.accumulateAndGet(
+                                deposit.amount(),
+                                (a1, a2) -> Amount.of(a1.value() + a2.value(), a1.currency())));
+                    case Withdrawal withdrawal ->
+                            new AccountReport.Row(withdrawal, balance.accumulateAndGet(
+                                    withdrawal.amount(),
+                                    (a1, a2) -> Amount.of(a1.value() - a2.value(), a1.currency())));
+                    default -> null;
+                })
+                .toList()
+        );
     }
 }
