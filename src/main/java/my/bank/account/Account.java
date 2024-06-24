@@ -54,10 +54,14 @@ public class Account {
                 getCurrency());
     }
 
-    public String operationLog() {
+    public String accountStatement() {
         return String.join(
                 "\n",
                 history.stream().map(Operation::toString).toList()
         );
+    }
+
+    public AccountReport getReport() {
+        throw new RuntimeException("implement me !");
     }
 }

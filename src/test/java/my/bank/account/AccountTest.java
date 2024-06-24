@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+import java.util.List;
 
 import static my.bank.account.Currency.EUR;
 import static my.bank.account.Currency.USD;
@@ -121,14 +122,15 @@ class AccountTest {
         void should_record_and_retrieve_operations_history() {
             // Given
             var anAccount = Account.withInitialFunds(Amount.of(100, EUR), today);
-
-            // When
             anAccount.deposit(Amount.of(10, EUR), today);
             anAccount.withdraw(Amount.of(1, EUR), today);
             anAccount.withdraw(Amount.of(2, EUR), today);
 
+            // When
+            var history = anAccount.getHistory();
+
             // Then
-            assertThat(anAccount.getHistory()).containsExactly(
+            assertThat(history).containsExactly(
                     Deposit.of(Amount.of(100, EUR), today),
                     Deposit.of(Amount.of(10, EUR), today),
                     Withdrawal.of(Amount.of(1, EUR), today),
@@ -140,16 +142,38 @@ class AccountTest {
         void should_collapse_operations_to_compute_account_balance() {
             // Given
             var anAccount = Account.withInitialFunds(Amount.of(100, EUR), today);
-
-            // When
             anAccount.deposit(Amount.of(10, EUR), today);
             anAccount.withdraw(Amount.of(1, EUR), today);
             anAccount.withdraw(Amount.of(2, EUR), today);
 
+            // When
+            var balance = anAccount.getBalance();
+
             // Then
-            assertThat(anAccount.getBalance()).isEqualTo(Amount.of(107, EUR));
+            assertThat(balance).isEqualTo(Amount.of(107, EUR));
+        }
+
+        @Test
+        void should_compute_balance_in_rows_history() {
+            // Given
+            var anAccount = Account.withInitialFunds(Amount.of(100, EUR), today);
+            anAccount.deposit(Amount.of(10, EUR), today);
+            anAccount.withdraw(Amount.of(1, EUR), today);
+            anAccount.withdraw(Amount.of(2, EUR), today);
+
+            // When
+            var report = anAccount.getReport();
+
+            // Then
+            assertThat(report).isEqualTo(
+                    new AccountReport(List.of(
+                            new AccountReport.Row(Deposit.of(Amount.of(100, EUR), today), Amount.of(100, EUR)),
+                            new AccountReport.Row(Deposit.of(Amount.of(10, EUR), today), Amount.of(110, EUR)),
+                            new AccountReport.Row(Withdrawal.of(Amount.of(1, EUR), today), Amount.of(109, EUR)),
+                            new AccountReport.Row(Withdrawal.of(Amount.of(2, EUR), today), Amount.of(107, EUR))
+                    ))
+            );
         }
     }
-
 
 }
