@@ -125,8 +125,7 @@ class AccountTest {
 
             // Then
             assertThat(anAccount.getHistory()).containsExactly(
-                Deposit.of(Amount.of(100, EUR)),
-
+                    Deposit.of(Amount.of(100, EUR)),
                     Deposit.of(Amount.of(10, EUR)),
                     Withdrawal.of(Amount.of(1, EUR)),
                     Withdrawal.of(Amount.of(2, EUR))

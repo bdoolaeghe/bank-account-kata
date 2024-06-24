@@ -37,19 +37,19 @@ public class Account {
         }
     }
 
-    public Amount getBalance() {
-        return Amount.of(
-                history.stream()
-                        .mapToDouble(Operation::signedAmountValue)
-                        .sum(),
-                getCurrency());
+    public List<Operation> getHistory() {
+        return history;
     }
 
     public Currency getCurrency() {
         return history.getFirst().getCurrency();
     }
 
-    public List<Operation> getHistory() {
-        return history;
+    public Amount getBalance() {
+        return Amount.of(
+                history.stream()
+                        .mapToDouble(Operation::signedAmountValue)
+                        .sum(),
+                getCurrency());
     }
 }

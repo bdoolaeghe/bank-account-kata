@@ -16,15 +16,15 @@ public record Amount(double value, Currency currency) {
         return new Amount(value, currency);
     }
 
+    public boolean gt(Amount another) {
+        checkCurrencyIsSame(another);
+        return value > another.value;
+    }
+
     private void checkCurrencyIsSame(Amount anotherAmount) {
         if (anotherAmount.currency != currency) {
             throw new IllegalArgumentException("Amount " + anotherAmount + " has not same currency as " + this);
         }
-    }
-
-    public boolean gt(Amount another) {
-        checkCurrencyIsSame(another);
-        return value > another.value;
     }
 
     @Override
