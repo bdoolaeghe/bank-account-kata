@@ -1,13 +1,14 @@
 package my.bank.account;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Account {
 
-    private Amount balance;
+    private final List<Operation> history = new ArrayList<>();
 
     private Account(Amount initialFunds) {
-        this.balance = initialFunds;
+        this.history.add(Deposit.of(initialFunds));
     }
 
     public static Account inEuro() {
@@ -19,26 +20,36 @@ public class Account {
     }
 
     public void deposit(Amount amount) {
-        this.balance = balance.plus(amount);
+        if (amount.currency() != getCurrency()) {
+            throw new IllegalAccountOperationException("Can not deposit " + amount + " onto account in currency " + getCurrency());
+        } else {
+            this.history.add(Deposit.of(amount));
+        }
     }
 
     public void withdraw(Amount amount) {
-        try {
-            this.balance = balance.minus(amount);
-        } catch (IllegalArgumentException e) {
-            throw new OverdrawnAccountException(e);
+        if (amount.currency() != getCurrency()) {
+            throw new IllegalAccountOperationException("Can not withdraw " + amount + " from account in currency " + getCurrency());
+        } else if (amount.gt(getBalance())) {
+            throw new OverdrawnAccountException("Can not withdraw an amount of " + amount + ". Insufficient funds: " + getBalance());
+        } else {
+            this.history.add(Withdrawal.of(amount));
         }
     }
 
     public Amount getBalance() {
-        return balance;
+        return Amount.of(
+                history.stream()
+                        .mapToDouble(Operation::signedAmountValue)
+                        .sum(),
+                getCurrency());
     }
 
     public Currency getCurrency() {
-        return balance.currency();
+        return history.getFirst().getCurrency();
     }
 
-    public List<Operation> getHisotry() {
-        throw new RuntimeException("implement me !");
+    public List<Operation> getHistory() {
+        return history;
     }
 }

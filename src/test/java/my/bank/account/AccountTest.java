@@ -61,7 +61,7 @@ class AccountTest {
             // When/Then
             assertThatThrownBy(() ->
                     anEurAccount.deposit(Amount.of(20, USD)))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(IllegalAccountOperationException.class);
         }
     }
 
@@ -89,6 +89,16 @@ class AccountTest {
         }
 
         @Test
+        void should_fail_to_withdraw_from_account_in_another_currency() {
+            // Given
+            var anAccount = Account.withInitialFunds(Amount.of(10.15, EUR));
+            // When/Then
+            assertThatThrownBy(() ->
+                    anAccount.withdraw(Amount.of(1, USD))
+            ).isInstanceOf(IllegalAccountOperationException.class);
+        }
+
+        @Test
         void should_fail_to_withdraw_when_account_get_overdrawn() {
             // Given
             var anAccount = Account.withInitialFunds(Amount.of(10.15, EUR));
@@ -106,7 +116,7 @@ class AccountTest {
         @Test
         void should_record_and_retrieve_operations_history() {
             // Given
-            var anAccount = Account.withInitialFunds(Amount.of(10, EUR));
+            var anAccount = Account.withInitialFunds(Amount.of(100, EUR));
 
             // When
             anAccount.deposit(Amount.of(10, EUR));
@@ -114,7 +124,8 @@ class AccountTest {
             anAccount.withdraw(Amount.of(2, EUR));
 
             // Then
-            assertThat(anAccount.getHisotry()).containsExactly(
+            assertThat(anAccount.getHistory()).containsExactly(
+                Deposit.of(Amount.of(100, EUR)),
 
                     Deposit.of(Amount.of(10, EUR)),
                     Withdrawal.of(Amount.of(1, EUR)),

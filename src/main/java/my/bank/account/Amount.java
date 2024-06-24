@@ -1,6 +1,10 @@
 package my.bank.account;
 
+import static my.bank.account.Currency.EUR;
+
 public record Amount(double value, Currency currency) {
+
+    static final Amount ZERO = Amount.of(0, EUR);
 
     public Amount {
         if (value < 0) {
@@ -35,7 +39,7 @@ public record Amount(double value, Currency currency) {
         }
     }
 
-    private boolean gt(Amount another) {
+    public boolean gt(Amount another) {
         checkCurrencyIsSame(another);
         return value > another.value;
     }
