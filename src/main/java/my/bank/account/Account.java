@@ -8,7 +8,7 @@ class Account {
         this.balance = initialFunds;
     }
 
-    public Account() {
+    Account() {
         this(new Amount(0, Currency.EUR));
     }
 
@@ -17,7 +17,11 @@ class Account {
     }
 
     void withdraw(Amount amount) {
-        throw new RuntimeException("implement me !");
+        try {
+            this.balance = balance.minus(amount);
+        } catch (IllegalArgumentException e) {
+            throw new OverdrawnAccountException(e);
+        }
     }
 
     Amount getBalance() {
@@ -27,4 +31,5 @@ class Account {
     public Currency getCurrency() {
         return balance.currency();
     }
+
 }

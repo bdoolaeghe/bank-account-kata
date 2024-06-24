@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static my.bank.account.Currency.EUR;
 import static my.bank.account.Currency.USD;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class AccountTest {
 
@@ -59,9 +60,43 @@ class AccountTest {
             var anEurAccount = new Account(new Amount(10, EUR));
             // When/Then
             assertThatThrownBy(() ->
-                anEurAccount.deposit(Amount.of(20, USD)))
+                    anEurAccount.deposit(Amount.of(20, USD)))
                     .isInstanceOf(IllegalArgumentException.class);
         }
     }
 
+    @Nested
+    class Withdrawal {
+
+        @Test
+        void should_successfully_withdraw_on_covered_account() {
+            // Given
+            var anAccount = new Account(Amount.of(10.15, EUR));
+            // When
+            anAccount.withdraw(Amount.of(1, EUR));
+            // Then
+            assertThat(anAccount.getBalance()).isEqualTo(Amount.of(9.15, EUR));
+        }
+
+        @Test
+        void should_successfully_empty_the_whole_account() {
+            // Given
+            var anAccount = new Account(Amount.of(10.15, EUR));
+            // When
+            anAccount.withdraw(Amount.of(10.15, EUR));
+            // Then
+            assertThat(anAccount.getBalance()).isEqualTo(Amount.of(0, EUR));
+        }
+
+        @Test
+        void should_fail_to_withdraw_when_account_get_overdrawn() {
+            // Given
+            var anAccount = new Account(Amount.of(10.15, EUR));
+            // When/Then
+            assertThatThrownBy(() ->
+                    anAccount.withdraw(Amount.of(1000, EUR))
+            ).isInstanceOf(OverdrawnAccountException.class);
+        }
+
+    }
 }
