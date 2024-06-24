@@ -54,16 +54,6 @@ class AccountTest {
         }
 
         @Test
-        void should_deposit_an_amount_on_negative_account() {
-            // Given
-            var anAccount = new Account(new Amount(-10, EUR));
-            // When
-            anAccount.deposit(new Amount(20, EUR));
-            // Then
-            assertThat(anAccount.getBalance()).isEqualTo(new Amount(10, EUR));
-        }
-
-        @Test
         void should_refuse_deposit_in_another_currency() {
             // Given
             var anEurAccount = new Account(new Amount(10, EUR));

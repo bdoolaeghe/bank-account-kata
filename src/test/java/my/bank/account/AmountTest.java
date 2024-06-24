@@ -22,9 +22,9 @@ class AmountTest {
         }
 
         @Test
-        void amount_should_support_negative_value() {
-            var amount = new Amount(-10, EUR);
-            assertThat(amount).isNotNull();
+        void should_reject_amount_negative_value() {
+            assertThatThrownBy(() -> new Amount(-1, EUR))
+                    .isInstanceOf(IllegalArgumentException.class);
         }
 
     }
@@ -40,16 +40,6 @@ class AmountTest {
             var newAmount = anEurAmount.plus(Amount.of(21.01, EUR));
             // Then
             assertThat(newAmount).isEqualTo(Amount.of(31.01, EUR));
-        }
-
-        @Test
-        void should_add_negative_amounts_in_same_currency() {
-            // Given
-            var anEurAmount = new Amount(10, EUR);
-            // When
-            var newAmount = anEurAmount.plus(Amount.of(-5, EUR));
-            // Then
-            assertThat(newAmount).isEqualTo(Amount.of(5, EUR));
         }
 
         @Test
