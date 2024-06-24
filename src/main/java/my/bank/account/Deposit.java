@@ -1,9 +1,14 @@
 package my.bank.account;
 
-public record Deposit(Amount amount) implements Operation {
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-    public static Deposit of(Amount amount) {
-        return new Deposit(amount);
+public record Deposit(Amount amount, java.util.Date date) implements Operation {
+
+    private static final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+
+    public static Deposit of(Amount amount, Date date) {
+        return new Deposit(amount, date);
     }
 
     @Override
@@ -13,6 +18,6 @@ public record Deposit(Amount amount) implements Operation {
 
     @Override
     public String toString() {
-        return "Deposit of "+ amount;
+        return "Deposit of "+ amount + " on " + df.format(date);
     }
 }

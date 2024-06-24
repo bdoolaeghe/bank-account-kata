@@ -1,9 +1,14 @@
 package my.bank.account;
 
-public record Withdrawal(Amount amount) implements Operation {
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-    public static Withdrawal of(Amount amount) {
-        return new Withdrawal(amount);
+public record Withdrawal(Amount amount, java.util.Date date) implements Operation {
+
+    private static final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+
+    public static Withdrawal of(Amount amount, Date date) {
+        return new Withdrawal(amount, date);
     }
 
     @Override
@@ -13,6 +18,6 @@ public record Withdrawal(Amount amount) implements Operation {
 
     @Override
     public String toString() {
-        return "Withdrawal of "+ amount;
+        return "Withdrawal of "+ amount + " on " + df.format(date);
     }
 }
