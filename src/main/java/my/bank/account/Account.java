@@ -6,12 +6,16 @@ public class Account {
 
     private Amount balance;
 
-    public Account(Amount initialFunds) {
+    private Account(Amount initialFunds) {
         this.balance = initialFunds;
     }
 
-    public Account() {
-        this(Amount.of(0, Currency.EUR));
+    public static Account inEuro() {
+        return new Account(Amount.of(0, Currency.EUR));
+    }
+
+    public static Account withInitialFunds(Amount initialFunds) {
+        return new Account(initialFunds);
     }
 
     public void deposit(Amount amount) {

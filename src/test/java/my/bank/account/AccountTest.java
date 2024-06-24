@@ -16,7 +16,7 @@ class AccountTest {
         @Test
         void should_get_currency_from_initial_funds() {
             // When
-            var anUsdAccount = new Account(Amount.of(10, USD));
+            var anUsdAccount = Account.withInitialFunds(Amount.of(10, USD));
             // Then
             assertThat(anUsdAccount.getCurrency()).isEqualTo(USD);
         }
@@ -24,7 +24,7 @@ class AccountTest {
         @Test
         void should_create_eur_account_by_default() {
             // When
-            var anEuroAccount = new Account();
+            var anEuroAccount = Account.inEuro();
             // Then
             assertThat(anEuroAccount.getCurrency()).isEqualTo(EUR);
         }
@@ -37,27 +37,27 @@ class AccountTest {
         @Test
         void should_deposit_an_amount_on_empty_account() {
             // Given
-            var anEmptyAccount = new Account();
+            var anEmptyAccount = Account.inEuro();
             // When
-            anEmptyAccount.deposit(new Amount(20, EUR));
+            anEmptyAccount.deposit(Amount.of(20, EUR));
             // Then
-            assertThat(anEmptyAccount.getBalance()).isEqualTo(new Amount(20, EUR));
+            assertThat(anEmptyAccount.getBalance()).isEqualTo(Amount.of(20, EUR));
         }
 
         @Test
         void should_deposit_an_amount_on_non_empty_account() {
             // Given
-            var anAccount = new Account(new Amount(10, EUR));
+            var anAccount = Account.withInitialFunds(Amount.of(10, EUR));
             // When
-            anAccount.deposit(new Amount(20, EUR));
+            anAccount.deposit(Amount.of(20, EUR));
             // Then
-            assertThat(anAccount.getBalance()).isEqualTo(new Amount(30, EUR));
+            assertThat(anAccount.getBalance()).isEqualTo(Amount.of(30, EUR));
         }
 
         @Test
         void should_refuse_deposit_in_another_currency() {
             // Given
-            var anEurAccount = new Account(new Amount(10, EUR));
+            var anEurAccount = Account.withInitialFunds(Amount.of(10, EUR));
             // When/Then
             assertThatThrownBy(() ->
                     anEurAccount.deposit(Amount.of(20, USD)))
@@ -71,7 +71,7 @@ class AccountTest {
         @Test
         void should_successfully_withdraw_on_covered_account() {
             // Given
-            var anAccount = new Account(Amount.of(10.15, EUR));
+            var anAccount = Account.withInitialFunds(Amount.of(10.15, EUR));
             // When
             anAccount.withdraw(Amount.of(1, EUR));
             // Then
@@ -81,7 +81,7 @@ class AccountTest {
         @Test
         void should_successfully_empty_the_whole_account() {
             // Given
-            var anAccount = new Account(Amount.of(10.15, EUR));
+            var anAccount = Account.withInitialFunds(Amount.of(10.15, EUR));
             // When
             anAccount.withdraw(Amount.of(10.15, EUR));
             // Then
@@ -91,7 +91,7 @@ class AccountTest {
         @Test
         void should_fail_to_withdraw_when_account_get_overdrawn() {
             // Given
-            var anAccount = new Account(Amount.of(10.15, EUR));
+            var anAccount = Account.withInitialFunds(Amount.of(10.15, EUR));
             // When/Then
             assertThatThrownBy(() ->
                     anAccount.withdraw(Amount.of(1000, EUR))
@@ -106,7 +106,7 @@ class AccountTest {
         @Test
         void should_record_and_retrieve_operations_history() {
             // Given
-            var anAccount = new Account(Amount.of(10, EUR));
+            var anAccount = Account.withInitialFunds(Amount.of(10, EUR));
 
             // When
             anAccount.deposit(Amount.of(10, EUR));
