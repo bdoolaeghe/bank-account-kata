@@ -32,7 +32,7 @@ class AccountTest {
     }
 
     @Nested
-    class Deposit {
+    class DepositTest {
 
         @Test
         void should_deposit_an_amount_on_empty_account() {
@@ -66,7 +66,7 @@ class AccountTest {
     }
 
     @Nested
-    class Withdrawal {
+    class WithdrawalTest {
 
         @Test
         void should_successfully_withdraw_on_covered_account() {
@@ -99,4 +99,43 @@ class AccountTest {
         }
 
     }
+
+    @Nested
+    class HistoryTest {
+
+        @Test
+        void should_record_and_retrieve_operations_history() {
+            // Given
+            var anAccount = new Account(Amount.of(10, EUR));
+
+            // When
+            anAccount.deposit(Amount.of(10, EUR));
+            anAccount.withdraw(Amount.of(1, EUR));
+            anAccount.withdraw(Amount.of(2, EUR));
+
+            // Then
+            assertThat(anAccount.getHisotry()).containsExactly(
+
+                    Deposit.of(Amount.of(10, EUR)),
+                    Withdrawal.of(Amount.of(1, EUR)),
+                    Withdrawal.of(Amount.of(2, EUR))
+            );
+        }
+
+        @Test
+        void should_collapse_operations_to_compute_account_balance() {
+            // Given
+            var anAccount = Account.withInitialFunds(Amount.of(100, EUR));
+
+            // When
+            anAccount.deposit(Amount.of(10, EUR));
+            anAccount.withdraw(Amount.of(1, EUR));
+            anAccount.withdraw(Amount.of(2, EUR));
+
+            // Then
+            assertThat(anAccount.getBalance()).isEqualTo(Amount.of(107, EUR));
+        }
+    }
+
+
 }

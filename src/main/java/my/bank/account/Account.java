@@ -1,5 +1,7 @@
 package my.bank.account;
 
+import java.util.List;
+
 public class Account {
 
     private Amount balance;
@@ -32,4 +34,7 @@ public class Account {
         return balance.currency();
     }
 
+    public List<Operation> getHisotry() {
+        throw new RuntimeException("implement me !");
+    }
 }
