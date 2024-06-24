@@ -19,21 +19,21 @@ public class Account {
         return new Account(initialFunds);
     }
 
-    public void deposit(Amount amount) {
-        if (amount.currency() != getCurrency()) {
-            throw new IllegalAccountOperationException("Can not deposit " + amount + " onto account in currency " + getCurrency());
+    public void deposit(Amount depositAmount) {
+        if (depositAmount.currency() != getCurrency()) {
+            throw new IllegalAccountOperationException("Can not deposit " + depositAmount + " onto account in currency " + getCurrency());
         } else {
-            this.history.add(Deposit.of(amount));
+            this.history.add(Deposit.of(depositAmount));
         }
     }
 
-    public void withdraw(Amount amount) {
-        if (amount.currency() != getCurrency()) {
-            throw new IllegalAccountOperationException("Can not withdraw " + amount + " from account in currency " + getCurrency());
-        } else if (amount.gt(getBalance())) {
-            throw new OverdrawnAccountException("Can not withdraw an amount of " + amount + ". Insufficient funds: " + getBalance());
+    public void withdraw(Amount withdrawalAmount) {
+        if (withdrawalAmount.currency() != getCurrency()) {
+            throw new IllegalAccountOperationException("Can not withdraw " + withdrawalAmount + " from account in currency " + getCurrency());
+        } else if (withdrawalAmount.gt(getBalance())) {
+            throw new OverdrawnAccountException("Can not withdraw an withdrawalAmount of " + withdrawalAmount + ". Insufficient funds: " + getBalance());
         } else {
-            this.history.add(Withdrawal.of(amount));
+            this.history.add(Withdrawal.of(withdrawalAmount));
         }
     }
 
