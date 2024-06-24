@@ -14,15 +14,19 @@ record Amount(double value, Currency currency) {
 
     Amount plus(Amount added) {
         checkCurrencyIsSame(added);
-        return new Amount(value + added.value, currency);
+        return Amount.of(value + added.value, currency);
     }
 
     Amount minus(Amount subtracted) {
         checkCurrencyIsSame(subtracted);
+        checkRemainPositiveAmount(subtracted);
+        return Amount.of(value - subtracted.value, currency);
+    }
+
+    private void checkRemainPositiveAmount(Amount subtracted) {
         if (subtracted.gt(this)) {
             throw new IllegalArgumentException("Can't subtract " + subtracted + " because it's greater than current amount (" + this + ")");
         }
-        return new Amount(value - subtracted.value, currency);
     }
 
     private void checkCurrencyIsSame(Amount anotherAmount) {
@@ -32,8 +36,8 @@ record Amount(double value, Currency currency) {
     }
 
     private boolean gt(Amount another) {
-        return currency == another.currency &&
-               value > another.value;
+        checkCurrencyIsSame(another);
+        return value > another.value;
     }
 
     @Override
