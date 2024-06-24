@@ -13,20 +13,21 @@ record Amount(double value, Currency currency) {
     }
 
     Amount plus(Amount added) {
-        if (added.currency != currency) {
-            throw new IllegalArgumentException("Can't add amount in " + added.currency + " to current amount " + this);
-        } else {
-            return new Amount(value + added.value, currency);
-        }
+        checkCurrencyIsSame(added);
+        return new Amount(value + added.value, currency);
     }
 
     Amount minus(Amount subtracted) {
-        if (subtracted.currency != currency) {
-            throw new IllegalArgumentException("Can't subtract amount in " + subtracted.currency + " to current amount " + this);
-        } else if (subtracted.gt(this)) {
+        checkCurrencyIsSame(subtracted);
+        if (subtracted.gt(this)) {
             throw new IllegalArgumentException("Can't subtract " + subtracted + " because it's greater than current amount (" + this + ")");
-        } else {
-            return new Amount(value - subtracted.value, currency);
+        }
+        return new Amount(value - subtracted.value, currency);
+    }
+
+    private void checkCurrencyIsSame(Amount anotherAmount) {
+        if (anotherAmount.currency != currency) {
+            throw new IllegalArgumentException("Amount " + anotherAmount + " has not same currency as " + this);
         }
     }
 
