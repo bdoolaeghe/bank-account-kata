@@ -2,6 +2,7 @@ package my.bank.account;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.BinaryOperator;
 
 public record Withdrawal(Amount amount, java.util.Date date) implements Operation {
 
@@ -12,8 +13,8 @@ public record Withdrawal(Amount amount, java.util.Date date) implements Operatio
     }
 
     @Override
-    public double signedAmountValue() {
-        return amount.value() * -1;
+    public BinaryOperator<Amount> accumulator() {
+        return Amount::subtract;
     }
 
     @Override

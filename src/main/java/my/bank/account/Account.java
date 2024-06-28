@@ -47,11 +47,11 @@ public class Account {
     }
 
     public Amount getBalance() {
-        return Amount.of(
-                history.stream()
-                        .mapToDouble(Operation::signedAmountValue)
-                        .sum(),
-                getCurrency());
+        return  history.stream()
+                .reduce(Amount.ZERO,
+                        Operation::accumulate,
+                        Amount::sum
+                );
     }
 
     public String createReport() {
