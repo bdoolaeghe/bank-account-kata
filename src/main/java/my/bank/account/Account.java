@@ -1,5 +1,7 @@
 package my.bank.account;
 
+import my.bank.account.AccountReport.Row;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,17 +71,31 @@ public class Account {
                 history.stream()
                 .map(operation ->
                         switch (operation) {
-                            case Deposit deposit ->
-                                    new AccountReport.Row(deposit, balance.accumulateAndGet(
-                                            deposit.amount(),
-                                            (a1, a2) -> Amount.of(a1.value() + a2.value(), a1.currency())));
-                            case Withdrawal withdrawal ->
-                                    new AccountReport.Row(withdrawal, balance.accumulateAndGet(
-                                            withdrawal.amount(),
-                                            (a1, a2) -> Amount.of(a1.value() - a2.value(), a1.currency())));
+                            case Deposit deposit -> newDepositRow(deposit, balance);
+                            case Withdrawal withdrawal -> newWithdrawalRow(withdrawal, balance);
                             default -> throw new IllegalArgumentException("Unsupported operation: " + operation.getClass());
                 })
                 .toList()
+        );
+    }
+
+    private static Row newWithdrawalRow(Withdrawal withdrawal, AtomicReference<Amount> balance) {
+        return new Row(
+                withdrawal,
+                balance.accumulateAndGet(
+                        withdrawal.amount(),
+                        (a1, a2) -> Amount.of(a1.value() - a2.value(), a1.currency())
+                )
+        );
+    }
+
+    private static Row newDepositRow(Deposit deposit, AtomicReference<Amount> balance) {
+        return new Row(
+                deposit,
+                balance.accumulateAndGet(
+                        deposit.amount(),
+                        (a1, a2) -> Amount.of(a1.value() + a2.value(), a1.currency())
+                )
         );
     }
 }
