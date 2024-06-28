@@ -18,6 +18,6 @@ public record Deposit(Amount amount, java.util.Date date) implements Operation {
 
     @Override
     public String toString() {
-        return "Deposit of "+ amount + " on " + df.format(date);
+        return "[" + df.format(date()) + "] Deposit of "+ amount;
     }
 }

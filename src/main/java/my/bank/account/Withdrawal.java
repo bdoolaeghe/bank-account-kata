@@ -18,6 +18,6 @@ public record Withdrawal(Amount amount, java.util.Date date) implements Operatio
 
     @Override
     public String toString() {
-        return "Withdrawal of "+ amount + " on " + df.format(date);
+        return "[" + df.format(date()) + "] Withdrawal of "+ amount;
     }
 }
