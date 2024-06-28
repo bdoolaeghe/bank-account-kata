@@ -4,11 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.BinaryOperator;
 
-public record Withdrawal(Amount amount, java.util.Date date) implements Operation {
+record Withdrawal(Amount amount, java.util.Date date) implements Operation {
 
     private static final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 
-    public static Withdrawal of(Amount amount, Date date) {
+    static Withdrawal of(Amount amount, Date date) {
         return new Withdrawal(amount, date);
     }
 

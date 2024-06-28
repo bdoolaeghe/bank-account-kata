@@ -38,7 +38,7 @@ public class Account {
         }
     }
 
-    public List<Operation> getHistory() {
+    List<Operation> getHistory() {
         return history;
     }
 
