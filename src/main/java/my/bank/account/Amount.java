@@ -24,7 +24,8 @@ public record Amount(double value, Currency currency) {
 
     public static Amount subtract(Amount initialAmount, Amount subtractedAmount) {
         if (initialAmount.currency != subtractedAmount.currency)
-            throw new IllegalArgumentException("currencies mismatch: " + initialAmount + " / " + subtractedAmount);
+        if (subtractedAmount.gt(initialAmount))
+            throw new IllegalArgumentException("can not subtract " + subtractedAmount + " from " + initialAmount + " (negative amount forbidden)");
         return Amount.of(initialAmount.value() - subtractedAmount.value(), initialAmount.currency());
     }
 
