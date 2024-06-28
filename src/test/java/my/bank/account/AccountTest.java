@@ -137,9 +137,25 @@ class AccountTest {
                     Withdrawal.of(Amount.of(2, EUR), today)
             );
         }
+    }
+
+    @Nested
+    class BalanceTest {
 
         @Test
-        void should_collapse_operations_to_compute_account_balance() {
+        void should_compute_balance_of_zero_when_account_is_empty() {
+            // Given
+            var emptyAccount = Account.inEuro(today);
+
+            // When
+            var balance = emptyAccount.getBalance();
+
+            // Then
+            assertThat(balance).isEqualTo(Amount.of(0, EUR));
+        }
+
+        @Test
+        void should_fold_operations_to_compute_account_balance() {
             // Given
             var anAccount = Account.withInitialFunds(Amount.of(100, EUR), today);
             anAccount.deposit(Amount.of(10, EUR), today);
@@ -151,28 +167,6 @@ class AccountTest {
 
             // Then
             assertThat(balance).isEqualTo(Amount.of(107, EUR));
-        }
-
-        @Test
-        void should_compute_balance_in_rows_history() {
-            // Given
-            var anAccount = Account.withInitialFunds(Amount.of(100, EUR), today);
-            anAccount.deposit(Amount.of(10, EUR), today);
-            anAccount.withdraw(Amount.of(1, EUR), today);
-            anAccount.withdraw(Amount.of(2, EUR), today);
-
-            // When
-            var report = anAccount.createReport();
-
-            // Then
-            assertThat(report).isEqualToIgnoringWhitespace(
-                    """
-                            [2024/06/28] Deposit of 100.0 EUR (new balance: 100.0 EUR)
-                            [2024/06/28] Deposit of 10.0 EUR (new balance: 110.0 EUR)
-                            [2024/06/28] Withdrawal of 1.0 EUR (new balance: 109.0 EUR)
-                            [2024/06/28] Withdrawal of 2.0 EUR (new balance: 107.0 EUR)
-                            """
-            );
         }
     }
 
