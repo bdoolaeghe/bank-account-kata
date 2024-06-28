@@ -162,16 +162,16 @@ class AccountTest {
             anAccount.withdraw(Amount.of(2, EUR), today);
 
             // When
-            var report = anAccount.getReport();
+            var report = anAccount.createReport();
 
             // Then
-            assertThat(report).isEqualTo(
-                    new AccountReport(List.of(
-                            new AccountReport.Row(Deposit.of(Amount.of(100, EUR), today), Amount.of(100, EUR)),
-                            new AccountReport.Row(Deposit.of(Amount.of(10, EUR), today), Amount.of(110, EUR)),
-                            new AccountReport.Row(Withdrawal.of(Amount.of(1, EUR), today), Amount.of(109, EUR)),
-                            new AccountReport.Row(Withdrawal.of(Amount.of(2, EUR), today), Amount.of(107, EUR))
-                    ))
+            assertThat(report).isEqualToIgnoringWhitespace(
+                    """
+                            [2024/06/28] Deposit of 100.0 EUR (new balance: 100.0 EUR)
+                            [2024/06/28] Deposit of 10.0 EUR (new balance: 110.0 EUR)
+                            [2024/06/28] Withdrawal of 1.0 EUR (new balance: 109.0 EUR)
+                            [2024/06/28] Withdrawal of 2.0 EUR (new balance: 107.0 EUR)
+                            """
             );
         }
     }

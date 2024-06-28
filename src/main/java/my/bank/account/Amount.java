@@ -16,6 +16,18 @@ public record Amount(double value, Currency currency) {
         return new Amount(value, currency);
     }
 
+    public static Amount sum(Amount a1, Amount a2) {
+        if (a1.currency != a2.currency)
+            throw new IllegalArgumentException("currencies mismatch: " + a1 + " / " + a2);
+        return Amount.of(a1.value() + a2.value(), a1.currency());
+    }
+
+    public static Amount subtract(Amount initialAmount, Amount subtractedAmount) {
+        if (initialAmount.currency != subtractedAmount.currency)
+            throw new IllegalArgumentException("currencies mismatch: " + initialAmount + " / " + subtractedAmount);
+        return Amount.of(initialAmount.value() - subtractedAmount.value(), initialAmount.currency());
+    }
+
     public boolean gt(Amount another) {
         checkCurrencyIsSame(another);
         return value > another.value;
