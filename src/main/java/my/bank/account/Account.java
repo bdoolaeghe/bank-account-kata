@@ -67,16 +67,17 @@ public class Account {
         AtomicReference<Amount> balance = new AtomicReference<>(Amount.ZERO);
         return new AccountReport(
                 history.stream()
-                .map(operation -> switch (operation) {
-                    case Deposit deposit ->
-                         new AccountReport.Row(deposit, balance.accumulateAndGet(
-                                deposit.amount(),
-                                (a1, a2) -> Amount.of(a1.value() + a2.value(), a1.currency())));
-                    case Withdrawal withdrawal ->
-                            new AccountReport.Row(withdrawal, balance.accumulateAndGet(
-                                    withdrawal.amount(),
-                                    (a1, a2) -> Amount.of(a1.value() - a2.value(), a1.currency())));
-                    default -> null;
+                .map(operation ->
+                        switch (operation) {
+                            case Deposit deposit ->
+                                    new AccountReport.Row(deposit, balance.accumulateAndGet(
+                                            deposit.amount(),
+                                            (a1, a2) -> Amount.of(a1.value() + a2.value(), a1.currency())));
+                            case Withdrawal withdrawal ->
+                                    new AccountReport.Row(withdrawal, balance.accumulateAndGet(
+                                            withdrawal.amount(),
+                                            (a1, a2) -> Amount.of(a1.value() - a2.value(), a1.currency())));
+                            default -> throw new IllegalArgumentException("Unsupported operation: " + operation.getClass());
                 })
                 .toList()
         );
